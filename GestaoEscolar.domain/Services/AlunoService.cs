@@ -1,14 +1,10 @@
 ﻿
 
-
-using System.Linq.Expressions;
 using AutoMapper;
 using FluentValidation;
-using GestaoEscolar.application.Common;
 using GestaoEscolar.Core.Interfaces;
+using GestaoEscolar.Core.Services;
 using GestaoEscolar.domain.DTOs.Aluno;
-using GestaoEscolar.domain.DTOs.Notas;
-using GestaoEscolar.domain.DTOs.Turma;
 using GestaoEscolar.domain.Interfaces.Repositories;
 using GestaoEscolar.domain.Interfaces.Services;
 using GestaoEscolar.domain.Models;
@@ -52,6 +48,19 @@ public class AlunoService : IAlunoService
         return ServiceResult<IEnumerable<AlunoDTO>>.SuccessResult(alunosDTO);
     }
 
+    public async Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO entity)
+    {
+        // Busca o aluno pelo ID no DTO
+        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == entity.Id);
+        if (aluno == null)
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { $"Aluno com o ID { entity.Id } não foi encontrado." });
+
+
+        // Converte para DTO usando AutoMapper
+        var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
+        return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO);
+    }
+
     public async Task<ServiceResult<AlunoDTO>> CreateAsync(InsertAlunoDTO entity)
     {
         var validationResult = await _validationHelper.ValidateEntityAsync<InsertAlunoDTO, AlunoDTO>(entity, _insertValidator);
@@ -82,34 +91,6 @@ public class AlunoService : IAlunoService
         return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO);
     }
 
-    public async Task<ServiceResult<AlunoDTO>> DeleteAsync(int id)
-    {
-        // Busca o aluno pelo ID
-        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == id);
-        if (aluno == null)
-            return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
-
-        var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
-
-        // Remove do banco de dados
-        await _alunoRepository.DeleteAsync(aluno);
-
-        return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO, "Aluno deletado com sucesso.");
-    }
-
-    public async Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO entity)
-    {
-        // Busca o aluno pelo ID no DTO
-        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == entity.Id);
-        if (aluno == null)
-            return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
-        
-
-        // Converte para DTO usando AutoMapper
-        var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
-        return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO);
-    }
-
     public async Task<ServiceResult<AlunoDTO>> UpdateAsync(UpdateAlunoDTO entity)
     {
         var validationResult = await _validationHelper.ValidateEntityAsync<UpdateAlunoDTO, AlunoDTO>(entity, _updateValidator);
@@ -133,5 +114,20 @@ public class AlunoService : IAlunoService
         // Retorna o DTO atualizado usando AutoMapper
         var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
         return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO);
+    }
+
+    public async Task<ServiceResult<AlunoDTO>> DeleteAsync(int id)
+    {
+        // Busca o aluno pelo ID
+        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == id);
+        if (aluno == null)
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
+
+        var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
+
+        // Remove do banco de dados
+        await _alunoRepository.DeleteAsync(aluno);
+
+        return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO, "Aluno deletado com sucesso.");
     }
 }

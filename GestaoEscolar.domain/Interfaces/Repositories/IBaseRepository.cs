@@ -1,7 +1,5 @@
 ﻿using System.Linq.Expressions;
-using System.Threading.Tasks;
-using GestaoEscolar.application.Common;
-using GestaoEscolar.domain.DTOs.Turma;
+using GestaoEscolar.Core.Services;
 
 namespace GestaoEscolar.domain.Interfaces.Repositories;
 

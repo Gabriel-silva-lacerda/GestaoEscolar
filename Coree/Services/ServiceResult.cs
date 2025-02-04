@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestaoEscolar.Core.Interfaces;
 
-namespace GestaoEscolar.application.Common;
+namespace GestaoEscolar.Core.Services;
 
 public class ServiceResult<T> : IServiceResult<T>
 {

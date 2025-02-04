@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using GestaoEscolar.application.Common;
+using GestaoEscolar.Core.Services;
 using GestaoEscolar.infra.Context;
 using Microsoft.EntityFrameworkCore;
 

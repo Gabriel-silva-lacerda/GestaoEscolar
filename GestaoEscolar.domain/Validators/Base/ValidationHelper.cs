@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using GestaoEscolar.application.Common;
 using GestaoEscolar.Core.Interfaces;
+using GestaoEscolar.Core.Services;
 
 namespace GestaoEscolar.domain.Validators.Base;
 
