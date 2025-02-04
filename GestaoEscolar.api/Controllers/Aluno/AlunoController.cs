@@ -1,6 +1,5 @@
 ﻿using GestaoEscolar.api.Controllers.Base;
-using GestaoEscolar.Core.Common;
-using GestaoEscolar.Core.Services;
+using GestaoEscolar.application.Responses;
 using GestaoEscolar.domain.DTOs.Aluno;
 using GestaoEscolar.domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;

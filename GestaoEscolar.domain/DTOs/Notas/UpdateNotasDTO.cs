@@ -8,5 +8,6 @@ namespace GestaoEscolar.domain.DTOs.Notas;
 
 public class UpdateNotasDTO
 {
+    public int Id { get; set; }
     public double Nota { get; set; }
 }

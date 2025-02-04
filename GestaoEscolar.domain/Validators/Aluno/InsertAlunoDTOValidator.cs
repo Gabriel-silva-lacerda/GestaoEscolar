@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using GestaoEscolar.domain.DTOs.Aluno;
-using GestaoEscolar.domain.Interfaces.Repositories;
 
 namespace GestaoEscolar.domain.Validators.Aluno;
 

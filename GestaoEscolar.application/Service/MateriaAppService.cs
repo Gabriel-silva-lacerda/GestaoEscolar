@@ -1,32 +1,37 @@
 ﻿
-using System.Linq.Expressions;
+using GestaoEscolar.Core.Services;
 using GestaoEscolar.domain.DTOs.Materia;
 using GestaoEscolar.domain.Interfaces.Services;
 
 public class MateriaAppService : IMateriaAppService
 {
-    public Task<MateriaDTO> Create(InsertMateriaDTO materiaDTO)
+    private readonly IMateriaService _materiaService;
+
+    public MateriaAppService(IMateriaService materiaService)
     {
-        throw new NotImplementedException();
+        _materiaService = materiaService;
+    }
+    public async Task<ServiceResult<IEnumerable<MateriaDTO>>> GetAllAsync()
+    {
+        return await _materiaService.GetAllAsync();
     }
 
-    public Task<bool> Delete(int id)
+    public async Task<ServiceResult<MateriaDTO>> GetKeyAsync(MateriaDTO materiaDTO)
     {
-        throw new NotImplementedException();
+        return await _materiaService.GetKeyAsync(materiaDTO);
+    }
+    public async Task<ServiceResult<MateriaDTO>> CreateAsync(InsertMateriaDTO materiaDTO)
+    {
+        return await _materiaService.CreateAsync(materiaDTO);
     }
 
-    public Task<IEnumerable<MateriaDTO>> GetAllAsync()
+    public async Task<ServiceResult<MateriaDTO>> UpdateAsync(UpdateMateriaDTO materiaDTO)
     {
-        throw new NotImplementedException();
+        return await _materiaService.UpdateAsync(materiaDTO);
     }
 
-    public Task<MateriaDTO> GetKeyAsync(MateriaDTO materiaDTO)
+    public async Task<ServiceResult<MateriaDTO>> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<MateriaDTO> Update(UpdateMateriaDTO materiaDTO)
-    {
-        throw new NotImplementedException();
+        return await _materiaService.DeleteAsync(id);
     }
 }

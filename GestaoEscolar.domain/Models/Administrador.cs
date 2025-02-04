@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace GestaoEscolar.domain.Models;
 
-public class Administrador
+public class Administrador : BaseEntity
 {
-    public int Id { get; set; }
     public string Nome { get; set; }
-    public DateTime DataInclusao { get; set; }
-    public DateTime DataAlteracao { get; set; }
-
 }

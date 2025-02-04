@@ -76,8 +76,6 @@ public class TurmaService : ITurmaService
 
         // Mapeia o DTO para a entidade de domínio
         var turma = _mapper.Map<Turma>(entity);
-        turma.DataInclusao = DateTime.UtcNow;
-        turma.DataAlteracao = DateTime.UtcNow;
 
         // Usa o repositório para criar a turma no banco
         var createResult = await _turmaRepository.CreateAsync(turma);
