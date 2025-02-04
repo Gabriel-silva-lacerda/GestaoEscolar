@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Coree\GestaoEscolar.Core.csproj" />
+    <!--<ProjectReference Include="..\Coree\GestaoEscolar.Core.csproj" />-->
+    <ProjectReference Include="..\Core\GestaoEscolar.core.csproj" />
   </ItemGroup>
 
 </Project>
