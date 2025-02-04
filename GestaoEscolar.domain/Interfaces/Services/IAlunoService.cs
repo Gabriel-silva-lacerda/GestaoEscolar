@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using GestaoEscolar.application.Common;
+using GestaoEscolar.Core.Services;
 using GestaoEscolar.domain.DTOs.Aluno;
 using GestaoEscolar.domain.Models;
 

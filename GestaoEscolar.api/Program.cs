@@ -34,10 +34,19 @@ builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ITurmaService, TurmaService>();
 builder.Services.AddScoped<ITurmaAppService, TurmaAppService>();
 
-builder.Services.AddScoped<IValidator<InsertTurmaDTO>, InsertTurmaDTOValidator>();
+// Validator Aluno
 builder.Services.AddTransient<IValidator<InsertAlunoDTO>, InsertAlunoDTOValidator>();
 builder.Services.AddTransient<IValidator<UpdateAlunoDTO>, UpdateAlunoDTOValidator>();
+// Validator Aluno
+
+// Validator Turma
+builder.Services.AddScoped<IValidator<InsertTurmaDTO>, InsertTurmaDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateTurmaDTO>, UpdateTurmaDTOValidator>();
+// Validator Turma
+
+// Validator lógica
 builder.Services.AddTransient<IValidationHelper, ValidationHelper>();
+// Validator lógica
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
