@@ -1,5 +1,4 @@
 ﻿
-using System.Linq.Expressions;
 using GestaoEscolar.Core.Services;
 using GestaoEscolar.domain.DTOs.Materia;
 using GestaoEscolar.domain.Interfaces.Services;
