@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core\GestaoEscolar.core.csproj" />
     <ProjectReference Include="..\GestaoEscolar.domain\GestaoEscolar.domain.csproj" />
   </ItemGroup>
 
