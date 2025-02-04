@@ -37,7 +37,10 @@ public class MappingProfile : Profile
 
         // Mapeamento para Notas
         CreateMap<Notas, NotasDTO>().ReverseMap();
-        CreateMap<Notas, InsertNotasDTO>().ReverseMap();
+        CreateMap<Notas, InsertNotasDTO>()
+            .ForMember(dest => dest.AlunoId, opt => opt.MapFrom(src => src.AlunoId))
+            .ForMember(dest => dest.MateriaId, opt => opt.MapFrom(src => src.MateriaId))
+            .ReverseMap();
         CreateMap<Notas, UpdateNotasDTO>().ReverseMap();
 
         // Outros mapeamentos continuam como estão

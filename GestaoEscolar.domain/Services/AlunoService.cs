@@ -21,16 +21,18 @@ public class AlunoService : IAlunoService
     private readonly IValidationHelper _validationHelper;
 
     public AlunoService(
+        IMapper mapper,
         IAlunoRepository alunoRepository, 
         ITurmaRepository turmaRepository, 
-        IMapper mapper,
-        IValidationHelper validationHelper,
         IValidator<InsertAlunoDTO> insertValidator,
-        IValidator<UpdateAlunoDTO> updateValidator)
+        IValidator<UpdateAlunoDTO> updateValidator,
+        IValidationHelper validationHelper)
     {
-        _alunoRepository = alunoRepository;
-        _turmaRepository = turmaRepository; 
         _mapper = mapper;
+
+        _alunoRepository = alunoRepository;
+        _turmaRepository = turmaRepository;
+        
         _insertValidator = insertValidator;
         _updateValidator = updateValidator;
         _validationHelper = validationHelper;
@@ -72,10 +74,6 @@ public class AlunoService : IAlunoService
             return ServiceResult<AlunoDTO>.FailureResult(new[] { "A turma associada ao ID fornecido não existe." });
 
         var aluno = _mapper.Map<Aluno>(entity);
-
-        // Define os campos adicionais
-        aluno.DataInclusao = DateTime.UtcNow;
-        aluno.DataAlteracao = DateTime.UtcNow;
 
         // Adiciona ao banco de dados
         var createResult = await _alunoRepository.CreateAsync(aluno);

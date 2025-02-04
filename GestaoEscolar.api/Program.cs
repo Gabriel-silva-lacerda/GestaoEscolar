@@ -2,12 +2,13 @@ using FluentValidation;
 using GestaoEscolar.application.Mappers;
 using GestaoEscolar.Core.Interfaces;
 using GestaoEscolar.domain.DTOs.Aluno;
+using GestaoEscolar.domain.DTOs.Materia;
 using GestaoEscolar.domain.DTOs.Turma;
 using GestaoEscolar.domain.Interfaces.Repositories;
 using GestaoEscolar.domain.Interfaces.Services;
-using GestaoEscolar.domain.Models;
 using GestaoEscolar.domain.Validators.Aluno;
 using GestaoEscolar.domain.Validators.Base;
+using GestaoEscolar.domain.Validators.Materia;
 using GestaoEscolar.domain.Validators.Turmas;
 using GestaoEscolar.infra.Context;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,16 @@ builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ITurmaService, TurmaService>();
 builder.Services.AddScoped<ITurmaAppService, TurmaAppService>();
 
+builder.Services.AddScoped<IMateriaRepository, MateriaRepository>();
+builder.Services.AddScoped<IMateriaService, MateriaService>();
+builder.Services.AddScoped<IMateriaAppService, MateriaAppService>();
+
+// Registra o repositório, serviço e app service para Notas
+builder.Services.AddScoped<INotasRepository, NotasRepository>();
+builder.Services.AddScoped<INotasService, NotasService>();
+builder.Services.AddScoped<INotasAppService, NotasAppService>();
+
+
 // Validator Aluno
 builder.Services.AddTransient<IValidator<InsertAlunoDTO>, InsertAlunoDTOValidator>();
 builder.Services.AddTransient<IValidator<UpdateAlunoDTO>, UpdateAlunoDTOValidator>();
@@ -43,6 +54,11 @@ builder.Services.AddTransient<IValidator<UpdateAlunoDTO>, UpdateAlunoDTOValidato
 builder.Services.AddScoped<IValidator<InsertTurmaDTO>, InsertTurmaDTOValidator>();
 builder.Services.AddScoped<IValidator<UpdateTurmaDTO>, UpdateTurmaDTOValidator>();
 // Validator Turma
+
+// Validator Materia
+builder.Services.AddScoped<IValidator<InsertMateriaDTO>, InsertMateriaDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateMateriaDTO>, UpdateMateriaDTOValidator>();
+// Validator Materia
 
 // Validator lógica
 builder.Services.AddTransient<IValidationHelper, ValidationHelper>();

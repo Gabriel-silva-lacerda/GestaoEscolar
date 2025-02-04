@@ -1,13 +1,14 @@
-﻿using GestaoEscolar.domain.DTOs.Notas;
+﻿using GestaoEscolar.Core.Services;
+using GestaoEscolar.domain.DTOs.Notas;
 using System.Linq.Expressions;
 
 namespace GestaoEscolar.domain.Interfaces.Services;
 
 public interface INotasService
 {
-    Task<IEnumerable<NotasDTO>> GetAllAsync();
-    Task<NotasDTO> GetKeyAsync(NotasDTO notasDTO);
-    Task<NotasDTO> Create(InsertNotasDTO notasDTO);
-    Task<NotasDTO> Update(UpdateNotasDTO notasDTO);
-    Task<bool> Delete(int id);
+    Task<ServiceResult<IEnumerable<NotasDTO>>> GetAllAsync();
+    Task<ServiceResult<NotasDTO>> GetKeyAsync(NotasDTO notasDTO);
+    Task<ServiceResult<NotasDTO>> CreateAsync(InsertNotasDTO notasDTO);
+    Task<ServiceResult<NotasDTO>> UpdateAsync(UpdateNotasDTO notasDTO);
+    Task<ServiceResult<NotasDTO>> DeleteAsync(int id);
 }
