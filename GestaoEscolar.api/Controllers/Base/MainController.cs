@@ -1,5 +1,4 @@
-﻿using Azure;
-using GestaoEscolar.Core.Common;
+﻿using GestaoEscolar.application.Responses;
 using GestaoEscolar.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 

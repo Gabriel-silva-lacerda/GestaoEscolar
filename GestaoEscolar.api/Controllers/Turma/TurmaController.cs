@@ -1,11 +1,7 @@
 ﻿using GestaoEscolar.api.Controllers.Base;
-using GestaoEscolar.Core.Common;
-using GestaoEscolar.domain.DTOs.Aluno;
-using GestaoEscolar.domain.DTOs.Conteudo;
+using GestaoEscolar.application.Responses;
 using GestaoEscolar.domain.DTOs.Turma;
 using GestaoEscolar.domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoEscolar.api.Controllers.Turma;
