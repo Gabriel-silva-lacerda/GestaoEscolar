@@ -52,7 +52,19 @@ public class MappingProfile : Profile
         CreateMap<Materia, InsertMateriaDTO>().ReverseMap();
         CreateMap<Materia, UpdateMateriaDTO>().ReverseMap();
 
-        CreateMap<Professor, ProfessorDTO>().ReverseMap();
+        //CreateMap<Professor, ProfessorDTO>().ReverseMap();
+        CreateMap<Professor, ProfessorDTO>()
+         .ForMember(dest => dest.Turmas, opt => opt.MapFrom(src => src.Turmas.Select(t => t.Nome)))  // Mapear os nomes das turmas
+         .ForMember(dest => dest.Materias, opt => opt.MapFrom(src => src.Materias.Select(m => m.Nome)));
+        //CreateMap<InsertProfessorDTO, Professor>()
+        //   .ForMember(dest => dest.Turmas, opt => opt.MapFrom(src =>
+        //       src.TurmaIds.Select(turmaId => new Turma { Id = turmaId }).ToList()))  // Mapeia os IDs para as turmas
+        //.ReverseMap();
+
+        // CreateMap<Professor, ProfessorDTO>()
+        //.ForMember(dest => dest.Turmas, opt => opt.MapFrom(src => src.Turmas)) // Turmas associadas ao professor
+        //.ForMember(dest => dest.Materias, opt => opt.MapFrom(src => src.Materias)) // Materias associadas ao professor
+        //.ReverseMap();
         CreateMap<Professor, InsertProfessorDTO>().ReverseMap();
         CreateMap<Professor, UpdateProfessorDTO>().ReverseMap();
     }

@@ -9,4 +9,5 @@ namespace GestaoEscolar.domain.DTOs.Turma;
 public class InsertTurmaDTO
 {
     public string Nome { get; set; }
+    public int ProfessorId { get; set; }
 }

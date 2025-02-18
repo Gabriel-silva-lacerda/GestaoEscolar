@@ -1,9 +1,7 @@
 ﻿using GestaoEscolar.api.Controllers.Base;
 using GestaoEscolar.application.Responses;
-using GestaoEscolar.domain.DTOs.Conteudo;
 using GestaoEscolar.domain.DTOs.Notas;
 using GestaoEscolar.domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoEscolar.api.Controllers.Notas;
