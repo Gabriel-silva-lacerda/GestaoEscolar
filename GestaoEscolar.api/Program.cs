@@ -1,9 +1,11 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using GestaoEscolar.application.Mappers;
 using GestaoEscolar.Core.Interfaces;
 using GestaoEscolar.domain.DTOs.Aluno;
 using GestaoEscolar.domain.DTOs.Materia;
 using GestaoEscolar.domain.DTOs.Notas;
+using GestaoEscolar.domain.DTOs.Professor;
 using GestaoEscolar.domain.DTOs.Turma;
 using GestaoEscolar.domain.Interfaces.Repositories;
 using GestaoEscolar.domain.Interfaces.Services;
@@ -11,6 +13,7 @@ using GestaoEscolar.domain.Validators.Aluno;
 using GestaoEscolar.domain.Validators.Base;
 using GestaoEscolar.domain.Validators.Materia;
 using GestaoEscolar.domain.Validators.Notas;
+using GestaoEscolar.domain.Validators.Professor;
 using GestaoEscolar.domain.Validators.Turmas;
 using GestaoEscolar.infra.Context;
 using Microsoft.EntityFrameworkCore;
@@ -29,14 +32,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Registra o repositório, serviço e app service para Aluno
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
 builder.Services.AddScoped<IAlunoAppService, AlunoAppService>();
 
+// Registra o repositório, serviço e app service para Turma
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ITurmaService, TurmaService>();
 builder.Services.AddScoped<ITurmaAppService, TurmaAppService>();
 
+// Registra o repositório, serviço e app service para Matéria
 builder.Services.AddScoped<IMateriaRepository, MateriaRepository>();
 builder.Services.AddScoped<IMateriaService, MateriaService>();
 builder.Services.AddScoped<IMateriaAppService, MateriaAppService>();
@@ -45,6 +51,11 @@ builder.Services.AddScoped<IMateriaAppService, MateriaAppService>();
 builder.Services.AddScoped<INotasRepository, NotasRepository>();
 builder.Services.AddScoped<INotasService, NotasService>();
 builder.Services.AddScoped<INotasAppService, NotasAppService>();
+
+// Registra o repositório, serviço e app service para Professor
+builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+builder.Services.AddScoped<IProfessorService, ProfessorService>();
+builder.Services.AddScoped<IProfessorAppService, ProfessorAppService>();
 
 // Validator Aluno
 builder.Services.AddTransient<IValidator<InsertAlunoDTO>, InsertAlunoDTOValidator>();
@@ -65,6 +76,11 @@ builder.Services.AddScoped<IValidator<UpdateMateriaDTO>, UpdateMateriaDTOValidat
 builder.Services.AddScoped<IValidator<InsertNotasDTO>, InsertNotasDTOValidator>();
 builder.Services.AddScoped<IValidator<UpdateNotasDTO>, UpdateNotasDTOValidator>();
 // Validator Notas
+
+// Validator Professor
+builder.Services.AddScoped<IValidator<InsertProfessorDTO>, InsertProfessorDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateProfessorDTO>, UpdateProfessorDTOValidator>();
+// Validator Professor
 
 // Validator lógica
 builder.Services.AddTransient<IValidationHelper, ValidationHelper>();

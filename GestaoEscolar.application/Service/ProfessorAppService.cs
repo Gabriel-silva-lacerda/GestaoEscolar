@@ -1,32 +1,41 @@
 ﻿
 using System.Linq.Expressions;
+using GestaoEscolar.Core.Services;
 using GestaoEscolar.domain.DTOs.Professor;
 using GestaoEscolar.domain.Interfaces.Services;
 
 public class ProfessorAppService : IProfessorAppService
 {
-    public Task<ProfessorDTO> Create(InsertProfessorDTO entity)
+    private readonly IProfessorService _professorService;
+
+    public ProfessorAppService(IProfessorService professorService)
     {
-        throw new NotImplementedException();
+        _professorService = professorService;
     }
 
-    public Task<bool> Delete(int id)
+    public async Task<ServiceResult<IEnumerable<ProfessorDTO>>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _professorService.GetAllAsync();
     }
 
-    public Task<IEnumerable<ProfessorDTO>> GetAllAsync()
+    public async Task<ServiceResult<ProfessorDTO>> GetKeyAsync(ProfessorDTO professorDTO)
     {
-        throw new NotImplementedException();
+        return await _professorService.GetKeyAsync(professorDTO);
     }
 
-    public Task<ProfessorDTO> GetKeyAsync(ProfessorDTO professorDTO)
+    public async Task<ServiceResult<ProfessorDTO>> CreateAsync(InsertProfessorDTO professorDTO)
     {
-        throw new NotImplementedException();
+        return await _professorService.CreateAsync(professorDTO);
+    }
+    public async Task<ServiceResult<ProfessorDTO>> UpdateAsync(UpdateProfessorDTO professorDTO)
+    {
+        return await _professorService.UpdateAsync(professorDTO);
     }
 
-    public Task<ProfessorDTO> Update(UpdateProfessorDTO entity)
+    public async Task<ServiceResult<ProfessorDTO>> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _professorService.DeleteAsync(id);
     }
+   
 }
+
