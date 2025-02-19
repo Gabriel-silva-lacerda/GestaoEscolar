@@ -10,5 +10,6 @@ public class InsertProfessorDTO
 {
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
-    public ICollection<int> TurmaIds { get; set; } // Lista de IDs de turmas
+    //public List<int> TurmaIds { get; set; }
+    //public List<int> MateriaIds { get; set; }
 }

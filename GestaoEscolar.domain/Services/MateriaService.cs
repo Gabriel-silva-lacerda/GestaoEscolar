@@ -11,24 +11,26 @@ using GestaoEscolar.domain.Models;
 public class MateriaService : IMateriaService
 {
     private readonly IMapper _mapper;
-
     private readonly IMateriaRepository _materiaRepository;
-
+    private readonly ITurmaRepository _turmaRepository;
+    private readonly IProfessorRepository _professorRepository;
     private readonly IValidator<InsertMateriaDTO> _insertValidator;
     private readonly IValidator<UpdateMateriaDTO> _updateValidator;
     private readonly IValidationHelper _validationHelper;
 
     public MateriaService(
-        IMapper mapper, 
+        IMapper mapper,
         IMateriaRepository materiaRepository,
+        ITurmaRepository turmaRepository,
+        IProfessorRepository professorRepository,
         IValidator<InsertMateriaDTO> insertValidator,
         IValidator<UpdateMateriaDTO> updateValidator,
         IValidationHelper validationHelper)
     {
         _mapper = mapper;
-
         _materiaRepository = materiaRepository;
-
+        _turmaRepository = turmaRepository;
+        _professorRepository = professorRepository;
         _insertValidator = insertValidator;
         _updateValidator = updateValidator;
         _validationHelper = validationHelper;
@@ -36,16 +38,14 @@ public class MateriaService : IMateriaService
 
     public async Task<ServiceResult<IEnumerable<MateriaDTO>>> GetAllAsync()
     {
-        var materias = await _materiaRepository.GetAllAsync();
-
-        var materiasDTO = _mapper.Map<IEnumerable<MateriaDTO>>(materias.Data);
-
+        var materias = await _materiaRepository.GetAllWithIncludesAsync(m => m.Professor, m => m.Turma, m => m.Notas, m => m.Conteudos);
+        var materiasDTO = _mapper.Map<IEnumerable<MateriaDTO>>(materias);
         return ServiceResult<IEnumerable<MateriaDTO>>.SuccessResult(materiasDTO);
     }
 
     public async Task<ServiceResult<MateriaDTO>> GetKeyAsync(MateriaDTO entity)
     {
-        var materia = await _materiaRepository.GetKeyAsync(a => a.Id == entity.Id);
+        var materia = await _materiaRepository.GetByIdWithIncludesAsync(m => m.Id == entity.Id, m => m.Professor, m => m.Turma, m => m.Notas, m => m.Conteudos);
         if (materia == null)
             return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Matéria com o ID {entity.Id} não foi encontrada." });
 
@@ -66,15 +66,27 @@ public class MateriaService : IMateriaService
 
         var materia = _mapper.Map<Materia>(entity);
 
+        var professor = await _professorRepository.GetKeyAsync(p => p.Id == entity.ProfessorId);
+        if (professor == null)
+            return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Professor com o ID {entity.ProfessorId} não foi encontrado." });
+
+        var turma = await _turmaRepository.GetKeyAsync(t => t.Id == entity.TurmaId);
+        if (turma == null)
+            return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Turma com o ID {entity.TurmaId} não foi encontrada." });
+
+        materia.Professor ??= new List<Professor>();
+        materia.Turma ??= new List<Turma>();
+
+        materia.Professor.Add(professor);
+        materia.Turma.Add(turma);
+
         var createResult = await _materiaRepository.CreateAsync(materia);
         if (!createResult.Success)
-        {
             return ServiceResult<MateriaDTO>.FailureResult(createResult.Errors);
-        }
 
-        var materiaDTOResult = _mapper.Map<MateriaDTO>(createResult.Data);
+        var materiaDTO = _mapper.Map<MateriaDTO>(createResult.Data);
 
-        return ServiceResult<MateriaDTO>.SuccessResult(materiaDTOResult);
+        return ServiceResult<MateriaDTO>.SuccessResult(materiaDTO);
     }
 
     public async Task<ServiceResult<MateriaDTO>> UpdateAsync(UpdateMateriaDTO entity)
@@ -83,7 +95,7 @@ public class MateriaService : IMateriaService
         if (validationResult != null)
             return validationResult;
 
-        var materia = await _materiaRepository.GetKeyAsync(a => a.Id == entity.Id);
+        var materia = await _materiaRepository.GetByIdWithIncludesAsync(m => m.Id == entity.Id, m => m.Professor, m => m.Turma, m => m.Notas, m => m.Conteudos);
         if (materia == null)
             return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Matéria com o ID { entity.Id } não foi encontrada." });
 
@@ -99,7 +111,7 @@ public class MateriaService : IMateriaService
 
     public async Task<ServiceResult<MateriaDTO>> DeleteAsync(int id)
     {
-        var materia = await _materiaRepository.GetKeyAsync(a => a.Id == id);
+        var materia = await _materiaRepository.GetByIdWithIncludesAsync(m => m.Id == id, m => m.Professor, m => m.Turma, m => m.Notas, m => m.Conteudos);
         if (materia == null)
             return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Matéria com o ID { id } não foi encontrada." });
 

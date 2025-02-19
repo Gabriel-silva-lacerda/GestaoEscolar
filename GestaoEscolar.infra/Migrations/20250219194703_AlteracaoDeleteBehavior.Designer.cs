@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestaoEscolar.infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250204152007_AdicionarBaseEntity")]
-    partial class AdicionarBaseEntity
+    [Migration("20250219194703_AlteracaoDeleteBehavior")]
+    partial class AlteracaoDeleteBehavior
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,7 +80,7 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasIndex("TurmaId");
 
-                    b.ToTable("Alunos");
+                    b.ToTable("Aluno");
                 });
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Conteudo", b =>
@@ -112,7 +112,7 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasIndex("MateriaId");
 
-                    b.ToTable("Conteudos");
+                    b.ToTable("Conteudo");
                 });
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Materia", b =>
@@ -135,7 +135,7 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materias");
+                    b.ToTable("Materia");
                 });
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Notas", b =>
@@ -167,7 +167,7 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasIndex("MateriaId");
 
-                    b.ToTable("Notas");
+                    b.ToTable("Nota");
                 });
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Professor", b =>
@@ -197,7 +197,7 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profressores");
+                    b.ToTable("Profressor");
                 });
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Turma", b =>
@@ -220,50 +220,50 @@ namespace GestaoEscolar.infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Turmas");
+                    b.ToTable("Turma");
                 });
 
             modelBuilder.Entity("MateriaProfessor", b =>
                 {
-                    b.Property<int>("MateriasId")
+                    b.Property<int>("MateriaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProfessoresId")
+                    b.Property<int>("ProfessorId")
                         .HasColumnType("int");
 
-                    b.HasKey("MateriasId", "ProfessoresId");
+                    b.HasKey("MateriaId", "ProfessorId");
 
-                    b.HasIndex("ProfessoresId");
+                    b.HasIndex("ProfessorId");
 
                     b.ToTable("MateriaProfessor");
                 });
 
             modelBuilder.Entity("MateriaTurma", b =>
                 {
-                    b.Property<int>("MateriasId")
+                    b.Property<int>("MateriaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TurmasId")
+                    b.Property<int>("TurmaId")
                         .HasColumnType("int");
 
-                    b.HasKey("MateriasId", "TurmasId");
+                    b.HasKey("MateriaId", "TurmaId");
 
-                    b.HasIndex("TurmasId");
+                    b.HasIndex("TurmaId");
 
                     b.ToTable("MateriaTurma");
                 });
 
             modelBuilder.Entity("ProfessorTurma", b =>
                 {
-                    b.Property<int>("ProfessoresId")
+                    b.Property<int>("ProfessorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TurmasId")
+                    b.Property<int>("TurmaId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProfessoresId", "TurmasId");
+                    b.HasKey("ProfessorId", "TurmaId");
 
-                    b.HasIndex("TurmasId");
+                    b.HasIndex("TurmaId");
 
                     b.ToTable("ProfessorTurma");
                 });
@@ -271,9 +271,9 @@ namespace GestaoEscolar.infra.Migrations
             modelBuilder.Entity("GestaoEscolar.domain.Models.Aluno", b =>
                 {
                     b.HasOne("GestaoEscolar.domain.Models.Turma", "Turma")
-                        .WithMany("Alunos")
+                        .WithMany("Aluno")
                         .HasForeignKey("TurmaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Turma");
@@ -284,7 +284,7 @@ namespace GestaoEscolar.infra.Migrations
                     b.HasOne("GestaoEscolar.domain.Models.Materia", "Materia")
                         .WithMany("Conteudos")
                         .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Materia");
@@ -295,13 +295,13 @@ namespace GestaoEscolar.infra.Migrations
                     b.HasOne("GestaoEscolar.domain.Models.Aluno", "Aluno")
                         .WithMany("Notas")
                         .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GestaoEscolar.domain.Models.Materia", "Materia")
                         .WithMany("Notas")
                         .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Aluno");
@@ -313,14 +313,14 @@ namespace GestaoEscolar.infra.Migrations
                 {
                     b.HasOne("GestaoEscolar.domain.Models.Materia", null)
                         .WithMany()
-                        .HasForeignKey("MateriasId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GestaoEscolar.domain.Models.Professor", null)
                         .WithMany()
-                        .HasForeignKey("ProfessoresId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("ProfessorId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -328,14 +328,14 @@ namespace GestaoEscolar.infra.Migrations
                 {
                     b.HasOne("GestaoEscolar.domain.Models.Materia", null)
                         .WithMany()
-                        .HasForeignKey("MateriasId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GestaoEscolar.domain.Models.Turma", null)
                         .WithMany()
-                        .HasForeignKey("TurmasId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -343,14 +343,14 @@ namespace GestaoEscolar.infra.Migrations
                 {
                     b.HasOne("GestaoEscolar.domain.Models.Professor", null)
                         .WithMany()
-                        .HasForeignKey("ProfessoresId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("ProfessorId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GestaoEscolar.domain.Models.Turma", null)
                         .WithMany()
-                        .HasForeignKey("TurmasId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("TurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -368,7 +368,7 @@ namespace GestaoEscolar.infra.Migrations
 
             modelBuilder.Entity("GestaoEscolar.domain.Models.Turma", b =>
                 {
-                    b.Navigation("Alunos");
+                    b.Navigation("Aluno");
                 });
 #pragma warning restore 612, 618
         }

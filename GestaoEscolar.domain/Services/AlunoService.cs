@@ -41,10 +41,10 @@ public class AlunoService : IAlunoService
     public async Task<ServiceResult<IEnumerable<AlunoDTO>>> GetAllAsync()
     {
         // Recupera todos os alunos
-        var alunos = await _alunoRepository.GetAllAsync();
+        var alunos = await _alunoRepository.GetAllWithIncludesAsync(a => a.Notas);
 
         // Converte para uma lista de DTOs usando AutoMapper
-        var alunosDTO = _mapper.Map<IEnumerable<AlunoDTO>>(alunos.Data);
+        var alunosDTO = _mapper.Map<IEnumerable<AlunoDTO>>(alunos);
 
         // Retorna os alunos no formato de sucesso
         return ServiceResult<IEnumerable<AlunoDTO>>.SuccessResult(alunosDTO);
@@ -53,7 +53,7 @@ public class AlunoService : IAlunoService
     public async Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO entity)
     {
         // Busca o aluno pelo ID no DTO
-        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == entity.Id);
+        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == entity.Id, p => p.Notas);
         if (aluno == null)
             return ServiceResult<AlunoDTO>.FailureResult(new[] { $"Aluno com o ID { entity.Id } não foi encontrado." });
 
@@ -69,9 +69,9 @@ public class AlunoService : IAlunoService
         if (validationResult != null)
             return validationResult;
 
-        var turmaExiste = await _turmaRepository.ExistsAsync(t => t.Id == entity.TurmaId);
-        if (!turmaExiste)
-            return ServiceResult<AlunoDTO>.FailureResult(new[] { "A turma associada ao ID fornecido não existe." });
+        var turmaExiste = await _turmaRepository.GetKeyAsync(t => t.Id == entity.TurmaId);
+        if (turmaExiste == null)
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { $"A turma associada ao ID $ {entity.TurmaId } não existe." });
 
         var aluno = _mapper.Map<Aluno>(entity);
 
@@ -96,7 +96,7 @@ public class AlunoService : IAlunoService
             return validationResult;
 
         // Busca o aluno pelo ID
-        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == entity.Id);
+        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == entity.Id, p => p.Notas);
         if (aluno == null)
             return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
 
@@ -117,7 +117,7 @@ public class AlunoService : IAlunoService
     public async Task<ServiceResult<AlunoDTO>> DeleteAsync(int id)
     {
         // Busca o aluno pelo ID
-        var aluno = await _alunoRepository.GetKeyAsync(a => a.Id == id);
+        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == id, p => p.Notas);
         if (aluno == null)
             return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
 

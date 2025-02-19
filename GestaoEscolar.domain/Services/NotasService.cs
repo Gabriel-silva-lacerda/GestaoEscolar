@@ -67,7 +67,7 @@ public class NotasService : INotasService
 
         var materia = await _materiaRepository.GetKeyAsync(m => m.Id == entity.MateriaId);
         if (materia == null)
-            return ServiceResult<NotasDTO>.FailureResult(new[] { $"Matéria com o ID { entity.AlunoId } não foi encontrada." });
+            return ServiceResult<NotasDTO>.FailureResult(new[] { $"Matéria com o ID { entity.MateriaId } não foi encontrada." });
 
         var nota = _mapper.Map<Notas>(entity);
         var createResult = await _notasRepository.CreateAsync(nota);
