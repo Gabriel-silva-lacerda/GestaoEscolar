@@ -9,4 +9,6 @@ namespace GestaoEscolar.domain.DTOs.Materia;
 public class InsertMateriaDTO
 {
     public string Nome { get; set; }
+    public int TurmaId { get; set; }
+    public int ProfessorId { get; set; }
 }

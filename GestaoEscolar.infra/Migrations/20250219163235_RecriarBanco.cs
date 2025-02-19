@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GestaoEscolar.infra.Migrations
 {
     /// <inheritdoc />
-    public partial class CriandoTabelas : Migration
+    public partial class RecriarBanco : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace GestaoEscolar.infra.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,71 +27,71 @@ namespace GestaoEscolar.infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Materias",
+                name: "Materia",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materias", x => x.Id);
+                    table.PrimaryKey("PK_Materia", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Profressores",
+                name: "Profressor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sobrenome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profressores", x => x.Id);
+                    table.PrimaryKey("PK_Profressor", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Turmas",
+                name: "Turma",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Turmas", x => x.Id);
+                    table.PrimaryKey("PK_Turma", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Conteudos",
+                name: "Conteudo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MateriaId = table.Column<int>(type: "int", nullable: false),
                     DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MateriaId = table.Column<int>(type: "int", nullable: false)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Conteudos", x => x.Id);
+                    table.PrimaryKey("PK_Conteudo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Conteudos_Materias_MateriaId",
+                        name: "FK_Conteudo_Materia_MateriaId",
                         column: x => x.MateriaId,
-                        principalTable: "Materias",
+                        principalTable: "Materia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -100,46 +100,46 @@ namespace GestaoEscolar.infra.Migrations
                 name: "MateriaProfessor",
                 columns: table => new
                 {
-                    MateriasId = table.Column<int>(type: "int", nullable: false),
-                    ProfessoresId = table.Column<int>(type: "int", nullable: false)
+                    MateriaId = table.Column<int>(type: "int", nullable: false),
+                    ProfessorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MateriaProfessor", x => new { x.MateriasId, x.ProfessoresId });
+                    table.PrimaryKey("PK_MateriaProfessor", x => new { x.MateriaId, x.ProfessorId });
                     table.ForeignKey(
-                        name: "FK_MateriaProfessor_Materias_MateriasId",
-                        column: x => x.MateriasId,
-                        principalTable: "Materias",
+                        name: "FK_MateriaProfessor_Materia_MateriaId",
+                        column: x => x.MateriaId,
+                        principalTable: "Materia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MateriaProfessor_Profressores_ProfessoresId",
-                        column: x => x.ProfessoresId,
-                        principalTable: "Profressores",
+                        name: "FK_MateriaProfessor_Profressor_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "Profressor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Alunos",
+                name: "Aluno",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sobrenome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Situacao = table.Column<bool>(type: "bit", nullable: false),
-                    TurmaId = table.Column<int>(type: "int", nullable: false)
+                    TurmaId = table.Column<int>(type: "int", nullable: false),
+                    DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Alunos", x => x.Id);
+                    table.PrimaryKey("PK_Aluno", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Alunos_Turmas_TurmaId",
+                        name: "FK_Aluno_Turma_TurmaId",
                         column: x => x.TurmaId,
-                        principalTable: "Turmas",
+                        principalTable: "Turma",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -148,22 +148,22 @@ namespace GestaoEscolar.infra.Migrations
                 name: "MateriaTurma",
                 columns: table => new
                 {
-                    MateriasId = table.Column<int>(type: "int", nullable: false),
-                    TurmasId = table.Column<int>(type: "int", nullable: false)
+                    MateriaId = table.Column<int>(type: "int", nullable: false),
+                    TurmaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MateriaTurma", x => new { x.MateriasId, x.TurmasId });
+                    table.PrimaryKey("PK_MateriaTurma", x => new { x.MateriaId, x.TurmaId });
                     table.ForeignKey(
-                        name: "FK_MateriaTurma_Materias_MateriasId",
-                        column: x => x.MateriasId,
-                        principalTable: "Materias",
+                        name: "FK_MateriaTurma_Materia_MateriaId",
+                        column: x => x.MateriaId,
+                        principalTable: "Materia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MateriaTurma_Turmas_TurmasId",
-                        column: x => x.TurmasId,
-                        principalTable: "Turmas",
+                        name: "FK_MateriaTurma_Turma_TurmaId",
+                        column: x => x.TurmaId,
+                        principalTable: "Turma",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -172,89 +172,89 @@ namespace GestaoEscolar.infra.Migrations
                 name: "ProfessorTurma",
                 columns: table => new
                 {
-                    ProfessoresId = table.Column<int>(type: "int", nullable: false),
-                    TurmasId = table.Column<int>(type: "int", nullable: false)
+                    ProfessorId = table.Column<int>(type: "int", nullable: false),
+                    TurmaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProfessorTurma", x => new { x.ProfessoresId, x.TurmasId });
+                    table.PrimaryKey("PK_ProfessorTurma", x => new { x.ProfessorId, x.TurmaId });
                     table.ForeignKey(
-                        name: "FK_ProfessorTurma_Profressores_ProfessoresId",
-                        column: x => x.ProfessoresId,
-                        principalTable: "Profressores",
+                        name: "FK_ProfessorTurma_Profressor_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "Profressor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProfessorTurma_Turmas_TurmasId",
-                        column: x => x.TurmasId,
-                        principalTable: "Turmas",
+                        name: "FK_ProfessorTurma_Turma_TurmaId",
+                        column: x => x.TurmaId,
+                        principalTable: "Turma",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notas",
+                name: "Nota",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nota = table.Column<double>(type: "float", nullable: false),
-                    DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AlunoId = table.Column<int>(type: "int", nullable: false),
-                    MateriaId = table.Column<int>(type: "int", nullable: false)
+                    MateriaId = table.Column<int>(type: "int", nullable: false),
+                    DataInclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notas", x => x.Id);
+                    table.PrimaryKey("PK_Nota", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notas_Alunos_AlunoId",
+                        name: "FK_Nota_Aluno_AlunoId",
                         column: x => x.AlunoId,
-                        principalTable: "Alunos",
+                        principalTable: "Aluno",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Notas_Materias_MateriaId",
+                        name: "FK_Nota_Materia_MateriaId",
                         column: x => x.MateriaId,
-                        principalTable: "Materias",
+                        principalTable: "Materia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Alunos_TurmaId",
-                table: "Alunos",
+                name: "IX_Aluno_TurmaId",
+                table: "Aluno",
                 column: "TurmaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Conteudos_MateriaId",
-                table: "Conteudos",
+                name: "IX_Conteudo_MateriaId",
+                table: "Conteudo",
                 column: "MateriaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MateriaProfessor_ProfessoresId",
+                name: "IX_MateriaProfessor_ProfessorId",
                 table: "MateriaProfessor",
-                column: "ProfessoresId");
+                column: "ProfessorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MateriaTurma_TurmasId",
+                name: "IX_MateriaTurma_TurmaId",
                 table: "MateriaTurma",
-                column: "TurmasId");
+                column: "TurmaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notas_AlunoId",
-                table: "Notas",
+                name: "IX_Nota_AlunoId",
+                table: "Nota",
                 column: "AlunoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notas_MateriaId",
-                table: "Notas",
+                name: "IX_Nota_MateriaId",
+                table: "Nota",
                 column: "MateriaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProfessorTurma_TurmasId",
+                name: "IX_ProfessorTurma_TurmaId",
                 table: "ProfessorTurma",
-                column: "TurmasId");
+                column: "TurmaId");
         }
 
         /// <inheritdoc />
@@ -264,7 +264,7 @@ namespace GestaoEscolar.infra.Migrations
                 name: "Administrador");
 
             migrationBuilder.DropTable(
-                name: "Conteudos");
+                name: "Conteudo");
 
             migrationBuilder.DropTable(
                 name: "MateriaProfessor");
@@ -273,22 +273,22 @@ namespace GestaoEscolar.infra.Migrations
                 name: "MateriaTurma");
 
             migrationBuilder.DropTable(
-                name: "Notas");
+                name: "Nota");
 
             migrationBuilder.DropTable(
                 name: "ProfessorTurma");
 
             migrationBuilder.DropTable(
-                name: "Alunos");
+                name: "Aluno");
 
             migrationBuilder.DropTable(
-                name: "Materias");
+                name: "Materia");
 
             migrationBuilder.DropTable(
-                name: "Profressores");
+                name: "Profressor");
 
             migrationBuilder.DropTable(
-                name: "Turmas");
+                name: "Turma");
         }
     }
 }

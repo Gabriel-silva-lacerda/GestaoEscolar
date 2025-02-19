@@ -1,5 +1,6 @@
 ﻿
 using System.Linq.Expressions;
+using System.Security.Principal;
 using AutoMapper;
 using FluentValidation;
 using GestaoEscolar.Core.Interfaces;
@@ -15,6 +16,7 @@ public class ProfessorService : IProfessorService
 
     private readonly IProfessorRepository _professorRepository;
     private readonly ITurmaRepository _turmaRepository;
+    private readonly IMateriaRepository _materiaRepository;
 
     private readonly IValidator<InsertProfessorDTO> _insertValidator;
     private readonly IValidator<UpdateProfessorDTO> _updateValidator;
@@ -24,6 +26,7 @@ public class ProfessorService : IProfessorService
         IMapper mapper,
         IProfessorRepository professorRepository,
         ITurmaRepository turmaRepository,
+        IMateriaRepository materiaRepository,
         IValidator<InsertProfessorDTO> insertValidator,
         IValidator<UpdateProfessorDTO> updateValidator,
         IValidationHelper validationHelper)
@@ -32,6 +35,7 @@ public class ProfessorService : IProfessorService
 
         _professorRepository = professorRepository;
         _turmaRepository = turmaRepository;
+        _materiaRepository = materiaRepository;
 
         _insertValidator = insertValidator;
         _updateValidator = updateValidator;
@@ -40,14 +44,14 @@ public class ProfessorService : IProfessorService
 
     public async Task<ServiceResult<IEnumerable<ProfessorDTO>>> GetAllAsync()
     {
-        var professores = await _professorRepository.GetAllAsync();
-        var professoresDTO = _mapper.Map<IEnumerable<ProfessorDTO>>(professores.Data);
+        var professores = await _professorRepository.GetAllWithIncludesAsync(p => p.Turma, p => p.Materia);
+        var professoresDTO = _mapper.Map<IEnumerable<ProfessorDTO>>(professores);
         return ServiceResult<IEnumerable<ProfessorDTO>>.SuccessResult(professoresDTO);
     }
 
     public async Task<ServiceResult<ProfessorDTO>> GetKeyAsync(ProfessorDTO professorDTO)
     {
-        var professor = await _professorRepository.GetKeyAsync(p => p.Id == professorDTO.Id);
+        var professor = await _professorRepository.GetByIdWithIncludesAsync(p => p.Id == professorDTO.Id, p => p.Turma, p => p.Materia);
         if (professor == null)
             return ServiceResult<ProfessorDTO>.FailureResult(new[] { $"Professor com o ID {professorDTO.Id} não foi encontrado." });
 
@@ -61,40 +65,13 @@ public class ProfessorService : IProfessorService
         if (validationResult != null)
             return validationResult;
 
-        //var professor = _mapper.Map<Professor>(entity);
-
-        var professor = new Professor
-        {
-            Nome = entity.Nome,
-            Sobrenome = entity.Sobrenome,
-            //DataInclusao = DateTime.UtcNow,
-            Status = true,
-            Turmas = new List<Turma>(),
-            Materias = new List<Materia>()
-        };
-
-        foreach (var turmaId in entity.TurmaIds)
-        {
-            var turma = await _turmaRepository.GetKeyAsync(t => t.Id == turmaId);
-            if (turma != null)
-            {
-
-                professor.Turmas.Add(turma);
-            }
-            else
-            {
-                return ServiceResult<ProfessorDTO>.FailureResult(new[] { $"Turma com ID {turmaId} não encontrada." });
-            }
-        }
+        var professor = _mapper.Map<Professor>(entity);
 
         var createResult = await _professorRepository.CreateAsync(professor);
         if (!createResult.Success)
             return ServiceResult<ProfessorDTO>.FailureResult(createResult.Errors);
 
         var professorDTOResult = _mapper.Map<ProfessorDTO>(createResult.Data);
-
-        //professorDTOResult.TurmaIds = professor.Turmas.Select(t => t.Id).ToList();
-        //professorDTOResult.MateriaIds = professor.Materias.Select(m => m.Id).ToList();
 
         return ServiceResult<ProfessorDTO>.SuccessResult(professorDTOResult);
     }
@@ -105,7 +82,7 @@ public class ProfessorService : IProfessorService
         if (validationResult != null)
             return validationResult;
 
-        var professor = await _professorRepository.GetKeyAsync(p => p.Id == professorDTO.Id);
+        var professor = await _professorRepository.GetByIdWithIncludesAsync(p => p.Id == professorDTO.Id, p => p.Turma, p => p.Materia);
         if (professor == null)
             return ServiceResult<ProfessorDTO>.FailureResult(new[] { $"Professor com o ID {professorDTO.Id} não foi encontrado." });
 
@@ -119,7 +96,7 @@ public class ProfessorService : IProfessorService
 
     public async Task<ServiceResult<ProfessorDTO>> DeleteAsync(int id)
     {
-        var professor = await _professorRepository.GetKeyAsync(p => p.Id == id);
+        var professor = await _professorRepository.GetByIdWithIncludesAsync(p => p.Id == id, p => p.Turma, p => p.Materia);
         if (professor == null)
             return ServiceResult<ProfessorDTO>.FailureResult(new[] { $"Professor com o ID {id} não foi encontrado." });
 
@@ -128,4 +105,28 @@ public class ProfessorService : IProfessorService
 
         return ServiceResult<ProfessorDTO>.SuccessResult(professorDTOResult, "Professor deletado com sucesso.");
     }
+
+    private async Task<ServiceResult<List<T>>> ValidarEBuscarEntidadesAsync<T>
+        (List<int> ids, Func<List<int>, Task<List<T>>> buscarEntidadesFunc, Func<T, int> getIdFunc, string tipoEntidade)
+    {
+        if (ids != null)
+        {
+            var entidades = await buscarEntidadesFunc(ids);
+            var idsExistentes = entidades.Select(getIdFunc).ToList();
+            var idsInexistentes = ids.Except(idsExistentes).ToList();
+
+            if (idsInexistentes.Any())
+            {
+                string mensagem = idsInexistentes.Count == 1
+                    ? $"O seguinte ID de {tipoEntidade} não existe: {idsInexistentes.First()}"
+                    : $"Os seguintes IDs de {tipoEntidade} não existem: {string.Join(", ", idsInexistentes)}";
+
+                return ServiceResult<List<T>>.FailureResult(new[] { mensagem });
+            }
+
+            return ServiceResult<List<T>>.SuccessResult(entidades);
+        }
+        return ServiceResult<List<T>>.SuccessResult(new List<T>());
+    }
+
 }

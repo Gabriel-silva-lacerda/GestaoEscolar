@@ -13,7 +13,7 @@ public class AlunoRepository : BaseRepository<Aluno>, IAlunoRepository
 
     public override async Task<ServiceResult<IEnumerable<Aluno>>> GetAllAsync()
     {
-        var alunos = await _context.Alunos
+        var alunos = await _context.Aluno
                                     .Include(a => a.Notas) 
                                     .ToListAsync();
 

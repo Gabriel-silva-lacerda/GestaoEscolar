@@ -55,7 +55,7 @@ public class ProfessorController : MainController
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(typeof(SuccessResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SuccessResponse<ProfessorDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id)
     {
