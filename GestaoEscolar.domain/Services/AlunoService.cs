@@ -8,6 +8,7 @@ using GestaoEscolar.domain.DTOs.Aluno;
 using GestaoEscolar.domain.Interfaces.Repositories;
 using GestaoEscolar.domain.Interfaces.Services;
 using GestaoEscolar.domain.Models;
+using GestaoEscolar.domain.Validators.Helpers;
 
 public class AlunoService : IAlunoService
 {
@@ -19,14 +20,15 @@ public class AlunoService : IAlunoService
     private readonly IValidator<InsertAlunoDTO> _insertValidator;
     private readonly IValidator<UpdateAlunoDTO> _updateValidator;
     private readonly IValidationHelper _validationHelper;
-
+    private readonly ICPFValidator _cpfValidator;
     public AlunoService(
         IMapper mapper,
         IAlunoRepository alunoRepository, 
         ITurmaRepository turmaRepository, 
         IValidator<InsertAlunoDTO> insertValidator,
         IValidator<UpdateAlunoDTO> updateValidator,
-        IValidationHelper validationHelper)
+        IValidationHelper validationHelper,
+        ICPFValidator cpfValidator)
     {
         _mapper = mapper;
 
@@ -36,6 +38,7 @@ public class AlunoService : IAlunoService
         _insertValidator = insertValidator;
         _updateValidator = updateValidator;
         _validationHelper = validationHelper;
+        _cpfValidator = cpfValidator;
     }
 
     public async Task<ServiceResult<IEnumerable<AlunoDTO>>> GetAllAsync()
@@ -50,13 +53,28 @@ public class AlunoService : IAlunoService
         return ServiceResult<IEnumerable<AlunoDTO>>.SuccessResult(alunosDTO);
     }
 
-    public async Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO entity)
+    public async Task<ServiceResult<AlunoDTO>> GetByIdAsync(int id)
     {
         // Busca o aluno pelo ID no DTO
-        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == entity.Id, p => p.Notas);
+        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == id, p => p.Notas);
         if (aluno == null)
-            return ServiceResult<AlunoDTO>.FailureResult(new[] { $"Aluno com o ID { entity.Id } não foi encontrado." });
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { $"Aluno com o ID { id } não foi encontrado." });
 
+
+        // Converte para DTO usando AutoMapper
+        var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
+        return ServiceResult<AlunoDTO>.SuccessResult(alunoDTO);
+    }
+
+    public async Task<ServiceResult<AlunoDTO>> GetByCpfAsync(string cpf)
+    {
+        // Busca o aluno pelo ID no DTO
+        if (!_cpfValidator.CPFValido(cpf))
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { "CPF inválido." });
+
+        var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.CPF == cpf, p => p.Notas);
+        if (aluno == null)
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { $"Aluno com o CPF { cpf } não foi encontrado." });
 
         // Converte para DTO usando AutoMapper
         var alunoDTO = _mapper.Map<AlunoDTO>(aluno);
@@ -72,6 +90,9 @@ public class AlunoService : IAlunoService
         var turmaExiste = await _turmaRepository.GetKeyAsync(t => t.Id == entity.TurmaId);
         if (turmaExiste == null)
             return ServiceResult<AlunoDTO>.FailureResult(new[] { $"A turma associada ao ID $ {entity.TurmaId } não existe." });
+
+        if (!_cpfValidator.CPFValido(entity.CPF))
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { "CPF inválido." });
 
         var aluno = _mapper.Map<Aluno>(entity);
 
@@ -99,6 +120,9 @@ public class AlunoService : IAlunoService
         var aluno = await _alunoRepository.GetByIdWithIncludesAsync(a => a.Id == entity.Id, p => p.Notas);
         if (aluno == null)
             return ServiceResult<AlunoDTO>.FailureResult(new[] { "Aluno não encontrado." });
+
+        if (!_cpfValidator.CPFValido(entity.CPF))
+            return ServiceResult<AlunoDTO>.FailureResult(new[] { "CPF inválido." });
 
         // Atualiza os campos da entidade com AutoMapper
         _mapper.Map(entity, aluno);

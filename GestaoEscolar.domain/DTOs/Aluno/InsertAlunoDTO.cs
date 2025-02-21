@@ -11,5 +11,6 @@ public class InsertAlunoDTO
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
     public bool Situacao { get; set; }
+    public string CPF { get; set; }
     public int TurmaId { get; set; }
 }

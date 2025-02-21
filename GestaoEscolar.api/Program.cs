@@ -11,6 +11,7 @@ using GestaoEscolar.domain.Interfaces.Repositories;
 using GestaoEscolar.domain.Interfaces.Services;
 using GestaoEscolar.domain.Validators.Aluno;
 using GestaoEscolar.domain.Validators.Base;
+using GestaoEscolar.domain.Validators.Helpers;
 using GestaoEscolar.domain.Validators.Materia;
 using GestaoEscolar.domain.Validators.Notas;
 using GestaoEscolar.domain.Validators.Professor;
@@ -84,6 +85,7 @@ builder.Services.AddScoped<IValidator<UpdateProfessorDTO>, UpdateProfessorDTOVal
 
 // Validator lógica
 builder.Services.AddTransient<IValidationHelper, ValidationHelper>();
+builder.Services.AddTransient<ICPFValidator, CPFValidator>();
 // Validator lógica
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

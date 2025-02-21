@@ -7,8 +7,9 @@ namespace GestaoEscolar.domain.DTOs.Turma;
 
 public class TurmaDTO : BaseDTO
 {
+    public int Id { get; set; }
     public string Nome { get; set; }
-    public ICollection<ProfessorResumoDTO> Professores { get; set; }
-    public ICollection<AlunoDTO> Alunos { get; set; }
-    public ICollection<MateriaResumoDTO> Materias { get; set; }
+    public IEnumerable<ProfessorResumoDTO> Professores { get; set; }
+    public IEnumerable<AlunoResumoDTO> Alunos { get; set; }
+    public IEnumerable<MateriaResumoDTO> Materias { get; set; }
 }

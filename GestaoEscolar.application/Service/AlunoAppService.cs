@@ -11,33 +11,35 @@ public class AlunoAppService : IAlunoAppService
         _alunoService = alunoService;
     }
 
-    public async Task<ServiceResult<AlunoDTO>> CreateAsync(InsertAlunoDTO alunoDTO)
-    {
-        // Delegando ao serviço
-        return await _alunoService.CreateAsync(alunoDTO);
-    }
-
-    public async Task<ServiceResult<AlunoDTO>> DeleteAsync(int id)
-    {
-        // Delegando ao serviço
-        return await _alunoService.DeleteAsync(id);
-    }
-
     public async Task<ServiceResult<IEnumerable<AlunoDTO>>> GetAllAsync()
     {
-        // Delegando ao serviço
         return await _alunoService.GetAllAsync();
     }
 
-    public async Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO alunoDTO)
+    public async Task<ServiceResult<AlunoDTO>> GetByIdAsync(int id)
     {
-        // Delegando ao serviço
-        return await _alunoService.GetKeyAsync(alunoDTO);
+        return await _alunoService.GetByIdAsync(id);
+    }
+
+
+    public async Task<ServiceResult<AlunoDTO>> GetByCpfAsync(string cpf)
+    {
+        return await _alunoService.GetByCpfAsync(cpf);
+    }
+
+    public async Task<ServiceResult<AlunoDTO>> CreateAsync(InsertAlunoDTO alunoDTO)
+    {
+        return await _alunoService.CreateAsync(alunoDTO);
     }
 
     public async Task<ServiceResult<AlunoDTO>> UpdateAsync(UpdateAlunoDTO alunoDTO)
     {
-        // Delegando ao serviço
         return await _alunoService.UpdateAsync(alunoDTO);
     }
+
+    public async Task<ServiceResult<AlunoDTO>> DeleteAsync(int id)
+    {
+        return await _alunoService.DeleteAsync(id);
+    }
+
 }

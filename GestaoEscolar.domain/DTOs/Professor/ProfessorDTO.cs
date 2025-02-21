@@ -6,11 +6,10 @@ namespace GestaoEscolar.domain.DTOs.Professor;
 
 public class ProfessorDTO : BaseDTO
 {
+    public int Id { get; set; }
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
     public bool Status { get; set; }
-    //[JsonIgnore]
     public IEnumerable<TurmaResumoDTO> Turmas { get; set; }
-    //[JsonIgnore]
     public IEnumerable<MateriaResumoDTO> Materias { get; set; }
 }

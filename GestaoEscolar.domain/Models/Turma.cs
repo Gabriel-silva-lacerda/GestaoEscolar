@@ -8,5 +8,4 @@ public class Turma : BaseEntity
     public ICollection<Professor> Professor { get; set; }
     public ICollection<Aluno> Aluno { get; set; }
     public ICollection<Materia> Materia { get; set; }
-
 }

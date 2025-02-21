@@ -11,5 +11,7 @@ public class NotasResumoDTO
     public int Id { get; set; }
     public double Nota { get; set; }
     public int AlunoId { get; set; }
+    //public string AlunoNome { get; set; }
     public int MateriaId { get; set; }
+    //public string MateriaNome { get; set; }
 }

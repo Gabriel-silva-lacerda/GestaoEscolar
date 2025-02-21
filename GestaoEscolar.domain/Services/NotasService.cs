@@ -84,7 +84,7 @@ public class NotasService : INotasService
         if (validationResult != null)
             return validationResult;
 
-        var nota = await _notasRepository.GetKeyAsync(n => n.Id == entity.Id);
+        var nota = await _notasRepository.GetByIdWithIncludesAsync(n => n.Id == entity.Id, n => n.Aluno, n => n.Materia);
         if (nota == null)
             return ServiceResult<NotasDTO>.FailureResult(new[] { $"Nota com o ID {entity.Id} não foi encontrada." });
 
@@ -98,7 +98,7 @@ public class NotasService : INotasService
 
     public async Task<ServiceResult<NotasDTO>> DeleteAsync(int id)
     {
-        var nota = await _notasRepository.GetKeyAsync(n => n.Id == id);
+        var nota = await _notasRepository.GetByIdWithIncludesAsync(n => n.Id == id, n => n.Aluno, n => n.Materia);
         if (nota == null)
             return ServiceResult<NotasDTO>.FailureResult(new[] { $"Nota com o ID {id} não foi encontrada." });
 

@@ -14,4 +14,5 @@ public class UpdateAlunoDTO
     public string Nome { get; set; }
     public string Sobrenome { get; set; }
     public bool Situacao { get; set; }
+    public string CPF { get; set; }
 }

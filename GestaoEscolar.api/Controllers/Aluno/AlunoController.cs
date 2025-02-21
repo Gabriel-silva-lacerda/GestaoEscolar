@@ -31,9 +31,19 @@ public class AlunoController : MainController
     [ProducesResponseType(typeof(SuccessResponse<AlunoDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
 
-    public async Task<IActionResult> GetKey(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var result = await _alunoAppService.GetKeyAsync(new AlunoDTO { Id = id });
+        var result = await _alunoAppService.GetByIdAsync(id);
+        return HandleServiceResult(result);
+    }
+
+    [HttpGet("cpf/{cpf}")]
+    [ProducesResponseType(typeof(SuccessResponse<AlunoDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+
+    public async Task<IActionResult> GetByCpf(string cpf)
+    {
+        var result = await _alunoAppService.GetByCpfAsync(cpf);
         return HandleServiceResult(result);
     }
 

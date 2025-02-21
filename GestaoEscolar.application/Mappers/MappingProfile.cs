@@ -20,12 +20,14 @@ public class MappingProfile : Profile
     {
         // Mapeamento para Aluno
         CreateMap<Aluno, AlunoDTO>()
+            .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => src.CPF))
             .ForMember(dest => dest.Notas, opt => opt.MapFrom(src => src.Notas)) // Mapeando as notas
             .ForMember(dest => dest.TurmaId, opt => opt.MapFrom(src => src.TurmaId)) // TurmaId já é direto
             .ReverseMap();
 
         CreateMap<Aluno, InsertAlunoDTO>().ReverseMap();
         CreateMap<Aluno, UpdateAlunoDTO>().ReverseMap();
+        CreateMap<Aluno, AlunoResumoDTO>().ReverseMap();
 
         // Mapeamento para Turma
         CreateMap<Turma, TurmaDTO>()
@@ -40,8 +42,9 @@ public class MappingProfile : Profile
 
         // Mapeamento para Notas
         CreateMap<Notas, NotasDTO>()
-            .ForMember(dest => dest.AlunoId, opt => opt.MapFrom(src => src.AlunoId))
-            .ForMember(dest => dest.MateriaId, opt => opt.MapFrom(src => src.MateriaId)).ReverseMap();
+             .ForMember(dest => dest.AlunoId, opt => opt.MapFrom(src => src.AlunoId))
+             .ForMember(dest => dest.MateriaId, opt => opt.MapFrom(src => src.MateriaId))
+             .ReverseMap();
         CreateMap<Notas, InsertNotasDTO>().ReverseMap();
         CreateMap<Notas, UpdateNotasDTO>().ReverseMap();
         CreateMap<Notas, NotasResumoDTO>().ReverseMap();
