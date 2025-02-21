@@ -72,7 +72,6 @@ public class TurmaService : ITurmaService
         if (professor == null)
             return ServiceResult<TurmaDTO>.FailureResult(new[] { $"Professor com o ID { entity.ProfessorId } não foi encontrado." });
 
-        professor.Turma ??= new List<Turma>();
         professor.Turma.Add(turma);
 
         var createResult = await _turmaRepository.CreateAsync(turma);

@@ -8,6 +8,7 @@ namespace GestaoEscolar.domain.DTOs.Conteudo;
 
 public class ConteudoDTO : BaseDTO
 {
+    public int Id { get; set; }
     public string Titulo { get; set; }
     public string Descricao { get; set; }
     public int MateriaId { get; set; }

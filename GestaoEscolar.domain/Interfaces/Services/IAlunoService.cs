@@ -8,7 +8,8 @@ namespace GestaoEscolar.domain.Interfaces.Services;
 public interface IAlunoService
 {
     Task<ServiceResult<IEnumerable<AlunoDTO>>> GetAllAsync();
-    Task<ServiceResult<AlunoDTO>> GetKeyAsync(AlunoDTO alunoDTO);
+    Task<ServiceResult<AlunoDTO>> GetByIdAsync(int id);
+    Task<ServiceResult<AlunoDTO>> GetByCpfAsync(string cpf);
     Task<ServiceResult<AlunoDTO>> CreateAsync(InsertAlunoDTO alunoDTO);
     Task<ServiceResult<AlunoDTO>> UpdateAsync(UpdateAlunoDTO alunoDTO);
     Task<ServiceResult<AlunoDTO>> DeleteAsync(int id);

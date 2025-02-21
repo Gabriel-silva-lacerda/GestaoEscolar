@@ -105,28 +105,4 @@ public class ProfessorService : IProfessorService
 
         return ServiceResult<ProfessorDTO>.SuccessResult(professorDTOResult, "Professor deletado com sucesso.");
     }
-
-    private async Task<ServiceResult<List<T>>> ValidarEBuscarEntidadesAsync<T>
-        (List<int> ids, Func<List<int>, Task<List<T>>> buscarEntidadesFunc, Func<T, int> getIdFunc, string tipoEntidade)
-    {
-        if (ids != null)
-        {
-            var entidades = await buscarEntidadesFunc(ids);
-            var idsExistentes = entidades.Select(getIdFunc).ToList();
-            var idsInexistentes = ids.Except(idsExistentes).ToList();
-
-            if (idsInexistentes.Any())
-            {
-                string mensagem = idsInexistentes.Count == 1
-                    ? $"O seguinte ID de {tipoEntidade} não existe: {idsInexistentes.First()}"
-                    : $"Os seguintes IDs de {tipoEntidade} não existem: {string.Join(", ", idsInexistentes)}";
-
-                return ServiceResult<List<T>>.FailureResult(new[] { mensagem });
-            }
-
-            return ServiceResult<List<T>>.SuccessResult(entidades);
-        }
-        return ServiceResult<List<T>>.SuccessResult(new List<T>());
-    }
-
 }

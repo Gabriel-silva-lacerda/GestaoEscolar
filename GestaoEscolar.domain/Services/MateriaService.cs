@@ -74,8 +74,8 @@ public class MateriaService : IMateriaService
         if (turma == null)
             return ServiceResult<MateriaDTO>.FailureResult(new[] { $"Turma com o ID {entity.TurmaId} não foi encontrada." });
 
-        materia.Professor ??= new List<Professor>();
-        materia.Turma ??= new List<Turma>();
+        //materia.Professor ??= new List<Professor>();
+        //materia.Turma ??= new List<Turma>();
 
         materia.Professor.Add(professor);
         materia.Turma.Add(turma);
